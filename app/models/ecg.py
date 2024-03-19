@@ -1,16 +1,14 @@
 from __future__ import annotations
 
 import datetime
-from typing import TYPE_CHECKING, AsyncIterator
+from typing import AsyncIterator
 
-from sqlalchemy import DateTime, select
+from sqlalchemy import JSON, DateTime, select
 from sqlalchemy.ext.asyncio import AsyncSession
-from sqlalchemy.orm import Mapped, mapped_column, relationship, selectinload
+from sqlalchemy.orm import Mapped, mapped_column
 
 from .base import Base
-
-if TYPE_CHECKING:
-    from .lead import Lead
+from .lead import Lead
 
 
 class ECG(Base):
@@ -18,45 +16,32 @@ class ECG(Base):
 
     id: Mapped[int] = mapped_column("id", autoincrement=True, nullable=False, unique=True, primary_key=True)
     date: Mapped[datetime.datetime] = mapped_column("date", DateTime, nullable=False)
-
-    leads: Mapped[list[Lead]] = relationship(
-        "Lead",
-        back_populates="ecg",
-        order_by="Lead.id",
-        cascade="save-update, merge, refresh-expire, expunge, delete, delete-orphan",
-    )
+    leads: Mapped[list[Lead]] = mapped_column("leads", JSON, nullable=False, default=list)
 
     @classmethod
-    async def get_all(cls, session: AsyncSession, include_leads: bool = True) -> AsyncIterator[ECG]:
+    async def get_all(cls, session: AsyncSession) -> AsyncIterator[ECG]:
         stmt = select(cls)
-        if include_leads:
-            stmt = stmt.options(selectinload(cls.leads))
         stream = await session.stream_scalars(stmt.order_by(cls.id))
         async for row in stream:
             yield row
 
     @classmethod
-    async def get_by_id(cls, session: AsyncSession, notebook_id: int, include_leads: bool = True) -> ECG | None:
+    async def get_by_id(cls, session: AsyncSession, notebook_id: int) -> ECG | None:
         stmt = select(cls).where(cls.id == notebook_id)
-        if include_leads:
-            stmt = stmt.options(selectinload(cls.leads))
         return await session.scalar(stmt.order_by(cls.id))
 
     @classmethod
-    async def create(cls, session: AsyncSession, date: datetime.datetime) -> ECG:
-        ecg = ECG(date=date)
+    async def create(cls, session: AsyncSession, date: datetime.datetime, leads: list[Lead]) -> ECG:
+        ecg = ECG(date=date, leads=leads)
         session.add(ecg)
         await session.flush()
 
-        new = await cls.get_by_id(session, ecg.id, include_leads=True)
+        new = await cls.get_by_id(session, ecg.id)
         if not new:
             raise RuntimeError()
         return new
 
-    async def update(self, session: AsyncSession, date: datetime.datetime) -> None:
-        self.date = date
-        await session.flush()
-
-    async def delete(self, session: AsyncSession) -> None:
-        await session.delete(self)
+    @classmethod
+    async def delete(cls, session: AsyncSession, ecg: ECG) -> None:
+        await session.delete(ecg)
         await session.flush()

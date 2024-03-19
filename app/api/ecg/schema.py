@@ -2,11 +2,12 @@ from datetime import datetime
 
 from pydantic import BaseModel
 
-from app.models import ECGSchema
+from app.models import ECGSchema, Lead
 
 
 class CreateECGRequest(BaseModel):
     date: datetime
+    leads: list[Lead]
 
 
 class CreateECGResponse(ECGSchema):
@@ -19,11 +20,3 @@ class ReadECGResponse(ECGSchema):
 
 class ReadAllECGResponse(BaseModel):
     ecgs: list[ECGSchema]
-
-
-class UpdateECGRequest(BaseModel):
-    date: datetime
-
-
-class UpdateECGResponse(ECGSchema):
-    pass

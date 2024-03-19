@@ -25,21 +25,9 @@ def upgrade() -> None:
         "ecgs",
         sa.Column("id", sa.Integer, primary_key=True),
         sa.Column("date", sa.DateTime, nullable=False),
-    )
-
-    op.create_table(
-        "leads",
-        sa.Column("id", sa.Integer, primary_key=True),
-        sa.Column("ecg_id", sa.Integer(), nullable=True),
-        sa.Column("name", sa.String(10), nullable=False),
-        sa.Column("signal", sa.JSON, default=list, nullable=False),
-        sa.ForeignKeyConstraint(
-            ("ecg_id",),
-            ["ecg.id"],
-        ),
+        sa.Column("leads", sa.JSON, nullable=False),
     )
 
 
 def downgrade() -> None:
     op.drop_table("ecgs")
-    op.drop_table("leads")

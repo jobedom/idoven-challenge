@@ -1,18 +1,11 @@
 # pylint: disable=unused-argument
 
-from fastapi import APIRouter, Depends, Path, Request
+from fastapi import APIRouter, Depends, HTTPException, Path, Request
 
 from app.models import ECGSchema
 
-from .schema import (
-    CreateECGRequest,
-    CreateECGResponse,
-    ReadAllECGResponse,
-    ReadECGResponse,
-    UpdateECGRequest,
-    UpdateECGResponse,
-)
-from .use_cases import CreateECG, DeleteECG, ReadAllECG, ReadECG, UpdateECG
+from .schema import CreateECGRequest, CreateECGResponse, ReadAllECGResponse, ReadECGResponse
+from .use_cases import CreateECG, DeleteECG, ReadAllECG, ReadECG
 
 router = APIRouter(prefix="/ecg")
 
@@ -23,37 +16,31 @@ async def create(
     data: CreateECGRequest,
     use_case: CreateECG = Depends(CreateECG),
 ) -> ECGSchema:
-    return await use_case.execute(data.date)
+    for lead in data.leads:
+        signal_length = len(lead["signal"])
+        if lead.get("sample_count"):
+            if lead["sample_count"] != signal_length:
+                raise HTTPException(status_code=422)  # 422 Unprocessable Entity
+        else:
+            lead["sample_count"] = signal_length
+    return await use_case.execute(data.date, data.leads)
 
 
 @router.get("", response_model=ReadAllECGResponse)
-async def read_all(request: Request, use_case: ReadAllECG = Depends(ReadAllECG)) -> ReadAllECGResponse:
-    return ReadAllECGResponse(ecgs=[nb async for nb in use_case.execute()])
+async def read_all(
+    request: Request,
+    use_case: ReadAllECG = Depends(ReadAllECG),
+) -> ReadAllECGResponse:
+    return ReadAllECGResponse(ecgs=[ecg async for ecg in use_case.execute()])
 
 
-@router.get(
-    "/{ecg_id}",
-    response_model=ReadECGResponse,
-)
+@router.get("/{ecg_id}", response_model=ReadECGResponse)
 async def read(
     request: Request,
     ecg_id: int = Path(..., description=""),
     use_case: ReadECG = Depends(ReadECG),
 ) -> ECGSchema:
     return await use_case.execute(ecg_id)
-
-
-@router.put(
-    "/{ecg_id}",
-    response_model=UpdateECGResponse,
-)
-async def update(
-    request: Request,
-    data: UpdateECGRequest,
-    ecg_id: int = Path(..., description=""),
-    use_case: UpdateECG = Depends(UpdateECG),
-) -> ECGSchema:
-    return await use_case.execute(ecg_id, title=data.title, notes=data.notes)
 
 
 @router.delete("/{ecg_id}", status_code=204)

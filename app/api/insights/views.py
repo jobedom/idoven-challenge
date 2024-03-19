@@ -16,6 +16,4 @@ async def read(
     use_case: ReadECG = Depends(ReadECG),
 ) -> ECGInsightsResponse:
     ecg = await use_case.execute(ecg_id)
-    insights = [{"lead": lead["name"], "insights": calculate_insights(lead)} for lead in ecg.leads]
-    response = {"ecg_insights": insights}
-    return response
+    return {"ecg_insights": [{"lead": lead["name"], "insights": calculate_insights(lead)} for lead in ecg.leads]}

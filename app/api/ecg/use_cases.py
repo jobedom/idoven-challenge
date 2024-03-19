@@ -40,4 +40,4 @@ class DeleteECG(UseCase):
         async with self.async_session.begin() as session:
             ecg = await ECG.get_by_id(session, ecg_id)
             if ecg:
-                await ECG.delete(ecg, session)
+                await ECG.delete(session, ecg)

@@ -4,7 +4,7 @@ from typing import AsyncIterator
 from fastapi import HTTPException
 
 from app.db import AsyncSession
-from app.models import ECG, ECGSchema, Lead
+from app.models import ECG, ECGSchema, LeadSchema
 
 
 class UseCase:
@@ -13,7 +13,7 @@ class UseCase:
 
 
 class CreateECG(UseCase):
-    async def execute(self, date: datetime, leads: list[Lead]) -> ECGSchema:
+    async def execute(self, date: datetime, leads: list[LeadSchema]) -> ECGSchema:
         async with self.async_session.begin() as session:
             ecg = await ECG.create(session, date, leads)
             return ECGSchema.model_validate(ecg)

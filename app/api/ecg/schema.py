@@ -2,12 +2,12 @@ from datetime import datetime
 
 from pydantic import BaseModel
 
-from app.models import ECGSchema, Lead
+from app.models import ECGSchema, LeadSchema
 
 
 class CreateECGRequest(BaseModel):
     date: datetime
-    leads: list[Lead]
+    leads: list[LeadSchema]
 
 
 class CreateECGResponse(ECGSchema):

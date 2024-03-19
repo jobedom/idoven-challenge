@@ -1,4 +1,4 @@
-from app.models.lead import Lead
+from app.models import LeadSchema
 
 from .insight_zero_crossings import calculate as calculate_zero_crossings_insight
 from .schema import AnyInsightSchema
@@ -8,5 +8,5 @@ insight_calculators = [
 ]
 
 
-def calculate_insights(lead: Lead) -> list[AnyInsightSchema]:
+def calculate_insights(lead: LeadSchema) -> list[AnyInsightSchema]:
     return [calculator(lead) for calculator in insight_calculators]

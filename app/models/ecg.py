@@ -8,7 +8,7 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.orm import Mapped, mapped_column
 
 from .base import Base
-from .lead import Lead
+from .schema import LeadSchema
 
 
 class ECG(Base):
@@ -16,7 +16,7 @@ class ECG(Base):
 
     id: Mapped[int] = mapped_column("id", autoincrement=True, nullable=False, unique=True, primary_key=True)
     date: Mapped[datetime.datetime] = mapped_column("date", DateTime, nullable=False)
-    leads: Mapped[list[Lead]] = mapped_column("leads", JSON, nullable=False, default=list)
+    leads: Mapped[list[LeadSchema]] = mapped_column("leads", JSON, nullable=False, default=list)
 
     @classmethod
     async def get_all(cls, session: AsyncSession) -> AsyncIterator[ECG]:
@@ -31,7 +31,7 @@ class ECG(Base):
         return await session.scalar(stmt.order_by(cls.id))
 
     @classmethod
-    async def create(cls, session: AsyncSession, date: datetime.datetime, leads: list[Lead]) -> ECG:
+    async def create(cls, session: AsyncSession, date: datetime.datetime, leads: list[LeadSchema]) -> ECG:
         ecg = ECG(date=date, leads=leads)
         session.add(ecg)
         await session.flush()

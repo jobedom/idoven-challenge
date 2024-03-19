@@ -2,9 +2,9 @@
 
 from fastapi import APIRouter, Depends, Path, Request
 
+from ..ecg.use_cases import ReadECG
 from . import calculate_insights
 from .schema import ECGInsightsResponse
-from .use_cases import ReadECG
 
 router = APIRouter(prefix="/insights")
 

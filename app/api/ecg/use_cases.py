@@ -22,17 +22,17 @@ class CreateECG(UseCase):
 class ReadAllECG(UseCase):
     async def execute(self) -> AsyncIterator[ECGSchema]:
         async with self.async_session() as session:
-            async for notebook in ECG.get_all(session):
-                yield ECGSchema.model_validate(notebook)
+            async for ecg in ECG.get_all(session):
+                yield ECGSchema.model_validate(ecg)
 
 
 class ReadECG(UseCase):
     async def execute(self, ecg_id: int) -> ECGSchema:
         async with self.async_session() as session:
-            notebook = await ECG.get_by_id(session, ecg_id)
-            if not notebook:
+            ecg = await ECG.get_by_id(session, ecg_id)
+            if not ecg:
                 raise HTTPException(status_code=404)
-            return ECGSchema.model_validate(notebook)
+            return ECGSchema.model_validate(ecg)
 
 
 class DeleteECG(UseCase):

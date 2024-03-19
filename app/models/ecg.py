@@ -26,8 +26,8 @@ class ECG(Base):
             yield row
 
     @classmethod
-    async def get_by_id(cls, session: AsyncSession, notebook_id: int) -> ECG | None:
-        stmt = select(cls).where(cls.id == notebook_id)
+    async def get_by_id(cls, session: AsyncSession, ecg_id: int) -> ECG | None:
+        stmt = select(cls).where(cls.id == ecg_id)
         return await session.scalar(stmt.order_by(cls.id))
 
     @classmethod

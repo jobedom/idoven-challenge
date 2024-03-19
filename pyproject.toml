@@ -1,0 +1,151 @@
+[tool.black]
+
+line-length = 120
+
+[tool.pytest.ini_options]
+
+minversion = "8.0"
+addopts = "-ra -q"
+testpaths = ["app/tests"]
+
+[tool.pylint.main]
+
+jobs = 0
+persistent = true
+py-version = "3.10"
+suggestion-mode = true
+
+[tool.pylint.basic]
+
+argument-naming-style = "snake_case"
+attr-naming-style = "snake_case"
+bad-names = ["foo", "bar", "baz"]
+class-attribute-naming-style = "any"
+class-const-naming-style = "UPPER_CASE"
+class-naming-style = "PascalCase"
+const-naming-style = "UPPER_CASE"
+function-naming-style = "snake_case"
+good-names = ["i", "j", "k"]
+inlinevar-naming-style = "any"
+method-naming-style = "snake_case"
+module-naming-style = "snake_case"
+no-docstring-rgx = "^_"
+variable-naming-style = "snake_case"
+
+[tool.pylint.classes]
+
+defining-attr-methods = [
+    "__init__",
+    "__new__",
+    "setUp",
+    "asyncSetUp",
+    "__post_init__",
+]
+exclude-protected = [
+    "_asdict",
+    "_fields",
+    "_replace",
+    "_source",
+    "_make",
+    "os._exit",
+]
+valid-classmethod-first-arg = ["cls"]
+valid-metaclass-classmethod-first-arg = ["mcs"]
+
+[tool.pylint.design]
+
+max-args = 5
+max-attributes = 20
+max-bool-expr = 5
+max-branches = 12
+max-locals = 15
+max-parents = 7
+max-public-methods = 20
+max-returns = 6
+max-statements = 50
+min-public-methods = 2
+
+[tool.pylint.exceptions]
+
+overgeneral-exceptions = ["builtins.BaseException", "builtins.Exception"]
+
+[tool.pylint.format]
+
+ignore-long-lines = "^\\s*(# )?<?https?://\\S+>?$"
+indent-after-paren = 4
+indent-string = "    "
+max-line-length = 120
+max-module-lines = 1000
+
+[tool.pylint."messages control"]
+
+confidence = [
+    "HIGH",
+    "CONTROL_FLOW",
+    "INFERENCE",
+    "INFERENCE_FAILURE",
+    "UNDEFINED",
+]
+disable = [
+    "raw-checker-failed",
+    "bad-inline-option",
+    "locally-disabled",
+    "file-ignored",
+    "suppressed-message",
+    "useless-suppression",
+    "deprecated-pragma",
+    "use-implicit-booleaness-not-comparison-to-string",
+    "use-implicit-booleaness-not-comparison-to-zero",
+    "use-symbolic-message-instead",
+    "too-few-public-methods",
+    "missing-module-docstring",
+    "missing-class-docstring",
+    "missing-function-docstring",
+]
+
+[tool.pylint.method_args]
+timeout-methods = [
+    "requests.api.delete",
+    "requests.api.get",
+    "requests.api.head",
+    "requests.api.options",
+    "requests.api.patch",
+    "requests.api.post",
+    "requests.api.put",
+    "requests.api.request",
+]
+
+[tool.pylint.miscellaneous]
+
+notes = ["FIXME", "TODO"]
+
+[tool.pylint.refactoring]
+
+max-nested-blocks = 5
+never-returning-functions = ["sys.exit", "argparse.parse_error"]
+
+[tool.pylint.reports]
+
+score = false
+
+[tool.pylint.similarities]
+
+ignore-comments = true
+ignore-docstrings = true
+ignore-imports = true
+ignore-signatures = true
+min-similarity-lines = 4
+
+[tool.pylint.variables]
+
+allow-global-unused-variables = true
+callbacks = ["cb_", "_cb"]
+dummy-variables-rgx = "_+$|(_[a-zA-Z0-9_]*[a-zA-Z0-9]+?$)|dummy|^ignored_|^unused_"
+ignored-argument-names = "_.*|^ignored_|^unused_"
+redefining-builtins-modules = [
+    "six.moves",
+    "past.builtins",
+    "future.builtins",
+    "builtins",
+    "io",
+]

@@ -1,0 +1,24 @@
+[[source]]
+url = "https://pypi.org/simple"
+verify_ssl = true
+name = "pypi"
+
+[packages]
+fastapi = "*"
+uvicorn = {extras = ["standard"], version = "*"}
+pydantic = "*"
+alembic = "*"
+pydantic-settings = "*"
+sqlalchemy = {extras = ["asyncio"], version = "*"}
+aiosqlite = "*"
+
+[dev-packages]
+black = "*"
+pytest = "*"
+httpx = "*"
+pylint = "*"
+eqassertions = "*"
+
+[requires]
+python_version = "3.10"
+python_full_version = "3.10.9"

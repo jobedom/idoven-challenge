@@ -46,9 +46,9 @@ At this point, you'll be able to start the FastAPI server and run the tests by u
 ./scripts/run_tests
 ```
 
-If you don't want to use Pipenv, I tried to make your life easier and provided Docker configurations for both launching the FastAPI server and running the tests without much fuss.
+If you don't want to use Pipenv, I tried to make your life easier and provided Docker configurations for both launching the FastAPI server and running the tests without much fuss, so you can ignore all previous setup steps and just peruse the provided `Makefile`.
 
-To do so open a terminal and run the appropriate Make targets:
+Open a terminal and run the appropriate Make targets (both will properly build the Docker image as a Make dependency):
 
 ```shell
 make run  # Will start the FastAPI server listening in port 3000

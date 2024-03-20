@@ -40,8 +40,8 @@ class ECG(Base):
 
     @classmethod
     async def delete(cls, session: AsyncSession, ecg: ECG, auth_user: User) -> None:
-        if auth_user.is_admin or auth_user.id == ecg.owner_id:
+        if auth_user.id == ecg.owner_id:
             await session.delete(ecg)
             await session.flush()
         else:
-            raise RuntimeError
+            raise AssertionError

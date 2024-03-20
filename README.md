@@ -157,6 +157,8 @@ Only regular users are able to use this endpoint.
 
 Get existing ECG.
 
+Current authenticated user will only have access to their ECGs.
+
 Only regular users are able to use this endpoint.
 
 ---
@@ -165,6 +167,8 @@ Only regular users are able to use this endpoint.
 
 Delete existing ECG.
 
+Current authenticated user will only have access to their ECGs.
+
 Only regular users are able to use this endpoint.
 
 ---
@@ -172,6 +176,8 @@ Only regular users are able to use this endpoint.
 `/api/insights/{ecg_id}` (GET)
 
 Get the insights for existing ECG.
+
+Current authenticated user will only have access to the insights of their ECGs.
 
 Only regular users are able to use this endpoint.
 

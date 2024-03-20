@@ -1,8 +1,8 @@
 # pylint: disable=unused-argument
 
-from fastapi import APIRouter, Depends, Path, Request
+from fastapi import APIRouter, Depends, HTTPException, Path, Request
 
-from app.models import ECGSchema
+from app.models import ECGSchema, User
 
 from .schema import CreateUserRequest, CreateUserResponse, ReadAllUserResponse, ReadUserResponse
 from .use_cases import CreateUser, DeleteUser, ReadAllUsers, ReadUser
@@ -16,6 +16,9 @@ async def create(
     data: CreateUserRequest,
     use_case: CreateUser = Depends(CreateUser),
 ) -> ECGSchema:
+    user = await User.get_by_email(data.email)
+    if user is not None:
+        raise HTTPException(status_code=400, detail="User with this email already exists")
     return await use_case.execute(data.email, data.password, data.is_admin)
 
 

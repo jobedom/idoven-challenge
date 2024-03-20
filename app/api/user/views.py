@@ -45,7 +45,7 @@ async def read(
     use_case: ReadUser = Depends(ReadUser),
     auth_user: User = Depends(get_current_user),
 ) -> UserSchema:
-    if user_id != auth_user.id and not auth_user.is_admin:
+    if not auth_user.is_admin:
         raise HTTPException(status_code=403)
     user = await use_case.execute(user_id)
     if user is None:

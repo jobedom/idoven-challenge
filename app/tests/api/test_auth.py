@@ -70,19 +70,9 @@ async def test_regular_create_user(async_client: AsyncClient, regular_access_tok
 
 
 @pytest.mark.anyio
-async def test_admin_create_user(async_client: AsyncClient, admin_access_token: str) -> None:
-    headers = {"Authorization": f"Bearer {admin_access_token}"}
-    payload = {"email": USER_REGULAR_EMAIL, "password": USER_REGULAR_PASSWORD, "is_admin": False}
-    response = await async_client.post("/api/user", headers=headers, json=payload)
-    assert 200 == response.status_code
-
-
-@pytest.mark.anyio
 async def test_avoid_duplicated_create_user(async_client: AsyncClient, admin_access_token: str) -> None:
     headers = {"Authorization": f"Bearer {admin_access_token}"}
     payload = {"email": USER_REGULAR_EMAIL, "password": USER_REGULAR_PASSWORD, "is_admin": False}
-    response = await async_client.post("/api/user", headers=headers, json=payload)
-    assert 200 == response.status_code
     response = await async_client.post("/api/user", headers=headers, json=payload)
     assert 400 == response.status_code  # Existing user
 

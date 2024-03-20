@@ -28,7 +28,7 @@ def anyio_backend() -> str:
     return "asyncio"
 
 
-@pytest.fixture(scope="function")
+@pytest.fixture(scope="session")
 def with_migrations():
     warnings.filterwarnings("ignore", category=DeprecationWarning)
     os.environ["APP_CONFIG_FILE"] = "test"
@@ -60,7 +60,7 @@ async def admin_access_token(async_client: AsyncClient) -> AsyncGenerator:
 
 
 @pytest.fixture
-async def regular_access_token(async_client: AsyncClient) -> AsyncGenerator:
+async def regular_access_token(async_client: AsyncClient, admin_access_token: str) -> AsyncGenerator:
     payload = {"username": USER_REGULAR_EMAIL, "password": USER_REGULAR_PASSWORD}
     response = await async_client.post("/api/login", data=payload)
     yield response.json().get("access_token")

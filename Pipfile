@@ -11,6 +11,9 @@ alembic = "*"
 pydantic-settings = "*"
 sqlalchemy = {extras = ["asyncio"], version = "*"}
 aiosqlite = "*"
+python-jose = {extras = ["cryptography"], version = "*"}
+passlib = {extras = ["bcrypt"], version = "*"}
+python-multipart = "*"
 
 [dev-packages]
 black = "*"

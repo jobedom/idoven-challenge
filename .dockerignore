@@ -1,0 +1,10 @@
+*.md
+Makefile
+Dockerfile
+.gitignore
+.env
+
+scripts/
+db/
+
+**/__pycache__/

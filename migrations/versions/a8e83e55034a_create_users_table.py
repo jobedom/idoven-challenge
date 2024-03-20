@@ -8,10 +8,19 @@ Create Date: 2024-03-20 00:47:12.555194
 
 """
 
+import logging
 from typing import Sequence, Union
 
 import sqlalchemy as sa
 from alembic import op
+
+from app.lib.password import get_hashed_password
+
+# Hack for an issue with how passlib attempts to read a
+# version from bcrypt (for logging only) and fails because
+# it's loading modules that no longer exist in bcrypt 4.1.x.
+# https://github.com/pyca/bcrypt/issues/684
+logging.getLogger("passlib").setLevel(logging.ERROR)
 
 # revision identifiers, used by Alembic.
 revision: str = "a8e83e55034a"
@@ -34,7 +43,7 @@ def upgrade() -> None:
         [
             {
                 "email": "idoven@example.com",
-                "password": "aaaa",
+                "password": get_hashed_password("admin1234"),
                 "is_admin": True,
             }
         ],

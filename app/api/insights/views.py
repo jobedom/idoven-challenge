@@ -15,7 +15,7 @@ router = APIRouter(prefix="/insights")
 @router.get("/{ecg_id}", response_model=ECGInsightsResponse)
 async def read(
     request: Request,
-    ecg_id: int = Path(..., description=""),
+    ecg_id: str = Path(..., description=""),
     use_case: ReadECG = Depends(ReadECG),
     auth_user: User = Depends(get_current_user),
 ) -> ECGInsightsResponse:

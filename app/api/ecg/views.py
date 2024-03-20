@@ -25,13 +25,13 @@ async def create(
                 raise HTTPException(status_code=422)  # 422 Unprocessable Entity
         else:
             lead["sample_count"] = signal_length
-    return await use_case.execute(data.date, data.leads, auth_user)
+    return await use_case.execute(data.id, data.date, data.leads, auth_user)
 
 
 @router.get("/{ecg_id}", response_model=ReadECGResponse)
 async def read(
     request: Request,
-    ecg_id: int = Path(..., description=""),
+    ecg_id: str = Path(..., description=""),
     use_case: ReadECG = Depends(ReadECG),
     auth_user: User = Depends(get_current_user),
 ) -> ECGSchema:
@@ -41,7 +41,7 @@ async def read(
 @router.delete("/{ecg_id}", status_code=204)
 async def delete(
     request: Request,
-    ecg_id: int = Path(..., description=""),
+    ecg_id: str = Path(..., description=""),
     use_case: DeleteECG = Depends(DeleteECG),
     auth_user: User = Depends(get_current_user),
 ) -> None:

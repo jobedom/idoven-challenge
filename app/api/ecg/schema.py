@@ -6,6 +6,7 @@ from app.models import ECGSchema, LeadSchema
 
 
 class CreateECGRequest(BaseModel):
+    id: str
     date: datetime
     leads: list[LeadSchema]
 

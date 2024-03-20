@@ -2,7 +2,7 @@ from __future__ import annotations
 
 import datetime
 
-from sqlalchemy import JSON, DateTime, select
+from sqlalchemy import JSON, DateTime, ForeignKey, select
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.orm import Mapped, mapped_column
 
@@ -18,7 +18,7 @@ class ECG(Base):
     date: Mapped[datetime.datetime] = mapped_column("date", DateTime, nullable=False)
     leads: Mapped[list[LeadSchema]] = mapped_column("leads", JSON, nullable=False, default=list)
 
-    owner_id: Mapped[int] = mapped_column("owner_id", nullable=False)
+    owner_id: Mapped[int] = mapped_column("owner_id", ForeignKey("users.id"), nullable=False)
 
     @classmethod
     async def get_by_id(cls, session: AsyncSession, ecg_id: int, auth_user: User) -> ECG | None:

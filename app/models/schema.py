@@ -4,6 +4,15 @@ from pydantic import BaseModel, ConfigDict
 from typing_extensions import NotRequired, TypedDict
 
 
+class UserSchema(BaseModel):
+    id: int
+    email: str
+    password: str
+    is_admin: bool
+
+    model_config = ConfigDict(from_attributes=True)
+
+
 class LeadSchema(TypedDict):
     name: str
     signal: list[int]

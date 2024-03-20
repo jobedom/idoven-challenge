@@ -1,4 +1,4 @@
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, timezone
 from typing import Any, Union
 
 from jose import jwt
@@ -9,10 +9,11 @@ from app.settings import settings
 def _create_token(
     subject: Union[str, Any], token_expire_minutes: int, secret_key: str, expires_delta: int = None
 ) -> str:
+    now = datetime.now(timezone.utc)
     if expires_delta is not None:
-        expires_delta = datetime.now(datetime.UTC) + expires_delta
+        expires_delta = now + expires_delta
     else:
-        expires_delta = datetime.now(datetime.UTC) + timedelta(minutes=token_expire_minutes)
+        expires_delta = now + timedelta(minutes=token_expire_minutes)
 
     to_encode = {"exp": expires_delta, "sub": str(subject)}
     encoded_jwt = jwt.encode(to_encode, secret_key, settings.TOKEN_ALGORITHM)

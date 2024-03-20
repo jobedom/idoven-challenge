@@ -21,6 +21,7 @@ class LeadSchema(TypedDict):
 
 class ECGSchema(BaseModel):
     id: int
+    owner_id: int
     date: datetime
     leads: list[LeadSchema]
 

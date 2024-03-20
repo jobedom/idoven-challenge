@@ -3,6 +3,7 @@ from typing import AsyncIterator
 from fastapi import HTTPException
 
 from app.db import AsyncSession
+from app.lib.password import get_hashed_password
 from app.models import User, UserSchema
 
 
@@ -14,7 +15,8 @@ class UseCase:
 class CreateUser(UseCase):
     async def execute(self, email: str, password: str, is_admin: bool) -> UserSchema:
         async with self.async_session.begin() as session:
-            user = await User.create(session, email, password, is_admin)
+            hashed_password = get_hashed_password(password)
+            user = await User.create(session, email, hashed_password, is_admin)
             return UserSchema.model_validate(user)
 
 
@@ -31,6 +33,15 @@ class ReadUser(UseCase):
             user = await User.get_by_id(session, user_id)
             if not user:
                 raise HTTPException(status_code=404)
+            return UserSchema.model_validate(user)
+
+
+class ReadUserByEmail(UseCase):
+    async def execute(self, email: str) -> UserSchema:
+        async with self.async_session() as session:
+            user = await User.get_by_email(session, email)
+            if not user:
+                return None
             return UserSchema.model_validate(user)
 
 

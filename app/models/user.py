@@ -6,8 +6,6 @@ from sqlalchemy import Boolean, String, select
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.orm import Mapped, mapped_column
 
-from app.lib.password import get_hashed_password
-
 from .base import Base
 
 
@@ -25,13 +23,6 @@ class User(Base):
         stream = await session.stream_scalars(stmt.order_by(cls.id))
         async for row in stream:
             yield row
-
-    @classmethod
-    async def check_login(cls, session: AsyncSession, email: str, password: str) -> User | None:
-        user = cls.get_by_email(session, email)
-        if not user or user.password == get_hashed_password(password):
-            return None
-        return User
 
     @classmethod
     async def get_by_email(cls, session: AsyncSession, email: str) -> User | None:
